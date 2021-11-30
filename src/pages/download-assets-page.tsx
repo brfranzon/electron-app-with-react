@@ -1,26 +1,22 @@
 import { useState } from "react";
+const { ipcRenderer } = window.require("electron");
 
 const DownloadAssetsPage = () => {
-  const [downloadStart, setDownloadStart] = useState("");
+  const [downloadStatus, setDownloadStatus] = useState("");
 
-  const { ipcRenderer } = window.require("electron");
-  const { dialog } = window.require("electron");
-
-  console.log(dialog);
-
-  const downloadButton = async () => {
-    await ipcRenderer.invoke("downloadAssets");
-    setDownloadStart('Starting....');
+  const downloadButton = () => {
+    ipcRenderer.invoke("downloadAssets");
+    setDownloadStatus("Starting....");
   };
 
-  ipcRenderer.on('downloadEnd', (e: any, value: any)=>{
-    setDownloadStart(value);
-  })
+  ipcRenderer.on("downloadEnd", (e: Event, value: string) => {
+    setDownloadStatus(value);
+  });
 
   return (
     <div>
       <button onClick={() => downloadButton()}> Download </button>
-      {downloadStart && <div> {downloadStart} </div>}
+      {downloadStatus && <div> {downloadStatus} </div>}
     </div>
   );
 };

@@ -22,27 +22,14 @@ function createWindow() {
     );
   });
 
-  ipcMain.handle("downloadAssets", (e, value) => {
-    // 1.
-    const URL = "https://i.ytimg.com/vi/Oxj38vkwmBs/mqdefault.jpg";
-    (async function () {
-      download(URL, "test")
-        .then(() => console.log("done - 1"))
-        .catch((err) => console.log("error: ", err));
-    })();
-
-    // 2. with options - a zip datei!!!
+  ipcMain.handle("downloadAssets", () => {
     const URLZip =
       "https://codeload.github.com/VLabStudio/Tutorials/zip/master";
+
     (async function () {
-
-      // download start
-      win.webContents.send("downloadStart");
-
       download(URLZip, "MY-ASSETS-FOLDER", { extract: true })
         .then(() => {
           console.log("done - 2");
-          // download end
           win.webContents.send("downloadEnd", "Download finished!");
         })
         .catch((err) => console.log("error: ", err));
